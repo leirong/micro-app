@@ -1,0 +1,18 @@
+{
+  "success": true,
+  "errorCode": 0,
+  "data": {
+    "apps": [
+      {
+        "key": "user",
+        "name": "用户中心",
+        "entry": "/micro-app/child/user/",
+        "routes": [
+          { "name": "首页", "path": "/user/home" },
+          { "name": "权限演示", "path": "/user/access" },
+          { "name": "CRUD 示例", "path": "/user/table" }
+        ]
+      }
+    ]
+  }
+}

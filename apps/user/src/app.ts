@@ -6,6 +6,11 @@ export async function getInitialState(): Promise<{ name: string }> {
   return { name: '@umijs/max' };
 }
 
+// 静态部署在子路径(GitHub Pages)时,业务接口也在子路径下,统一加 baseURL 前缀
+export const request = {
+  baseURL: process.env.API_BASE || '/',
+};
+
 export const layout = () => {
   // 作为 qiankun 子应用被 portal 加载时,隐藏自身布局外壳(菜单+顶栏),
   // 菜单统一由 portal 主应用提供,这里只渲染页面内容,避免二级布局重叠

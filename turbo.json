@@ -6,6 +6,9 @@
       "dependsOn": [
         "^build"
       ],
+      "env": [
+        "GH_PAGES"
+      ],
       "inputs": [
         "$TURBO_DEFAULT$",
         ".env*"

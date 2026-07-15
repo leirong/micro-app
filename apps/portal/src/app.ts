@@ -11,12 +11,16 @@ type MicroAppConfig = {
 };
 type AppsResponse = { apps: MicroAppConfig[] };
 
+// 路由 base:本地为 '/',GitHub Pages 上为 '/micro-app/'(构建期由 .umirc define 注入)
+const ROUTER_BASE = process.env.ROUTER_BASE || '/';
+
 // 启动时从接口拉取子应用列表(内含菜单信息)。
 // 用一个 memo 化的 Promise 保证只请求一次。
+// dev 走 mock 的 /api/apps;静态部署(GitHub Pages)走 public 下的 apps.json。
 let appsPromise: Promise<AppsResponse> | undefined;
 function getApps(): Promise<AppsResponse> {
   if (!appsPromise) {
-    appsPromise = fetch('/api/apps')
+    appsPromise = fetch(process.env.APPS_API || '/api/apps')
       .then((res) => res.json())
       .then((res) => res.data as AppsResponse)
       .catch(() => ({ apps: [] }));
@@ -37,7 +41,7 @@ export const qiankun = async () => {
       path: `/${app.key}`,
       microApp: app.key,
       mode: 'match',
-      microAppProps: { base: `/${app.key}` },
+      microAppProps: { base: `${ROUTER_BASE}${app.key}` },
       children: app.routes.map((r) => ({ name: r.name, path: r.path })),
     })),
   };
@@ -47,6 +51,11 @@ export const qiankun = async () => {
 export async function getInitialState(): Promise<{ name: string }> {
   return { name: '@umijs/max' };
 }
+
+// 静态部署在子路径(GitHub Pages)时,业务接口也在子路径下,统一加 baseURL 前缀
+export const request = {
+  baseURL: process.env.API_BASE || '/',
+};
 
 export const layout = () => {
   return {

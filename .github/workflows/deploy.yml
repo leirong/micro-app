@@ -1,0 +1,72 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  # 支持在 Actions 页面手动触发
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# 同一时间只保留最新一次部署
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      # 切换 umi 的 base/publicPath 到 /micro-app/ 子路径(见各应用 .umirc.ts)
+      GH_PAGES: 'true'
+    steps:
+      - uses: actions/checkout@v4
+
+      # 首次运行时自动启用仓库的 GitHub Pages(source = GitHub Actions)
+      - uses: actions/configure-pages@v5
+        with:
+          enablement: true
+
+      # 版本读取 package.json 的 packageManager 字段
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build
+        run: pnpm build
+
+      # 站点结构:
+      #   /            -> portal 主应用
+      #   /child/user/ -> user 子应用(qiankun entry,见 public/api/apps.json)
+      - name: Assemble site
+        run: |
+          mkdir -p site/child/user
+          cp -r apps/portal/dist/. site/
+          cp -r apps/user/dist/. site/child/user/
+          # SPA 深链接刷新时 Pages 返回 404,用 404.html 兜底渲染主应用
+          cp site/index.html site/404.html
+          # 关闭 Jekyll 处理,原样托管构建产物
+          touch site/.nojekyll
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

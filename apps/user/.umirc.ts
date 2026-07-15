@@ -1,6 +1,15 @@
 import { defineConfig } from '@umijs/max';
 
+// GitHub Pages 上 user 作为子应用部署在主站的 child/user/ 目录下,
+// publicPath 用绝对路径,保证被 qiankun 加载时静态资源(js/css/chunk)能正确解析
+const isGhPages = process.env.GH_PAGES === 'true';
+
 export default defineConfig({
+  publicPath: isGhPages ? '/micro-app/child/user/' : '/',
+  define: {
+    // 静态部署时接口都挂在主站仓库子路径下,作为 request 的 baseURL
+    'process.env.API_BASE': isGhPages ? '/micro-app/' : '/',
+  },
   antd: {},
   access: {},
   model: {},
@@ -36,4 +45,3 @@ export default defineConfig({
   ],
   npmClient: 'pnpm',
 });
-
