@@ -6,7 +6,7 @@ const apps = [
     key: 'user',
     name: '用户中心',
     // user 子应用 dev server 地址(见 apps/user/.env 的 PORT=8100)
-    entry: '//localhost:8100',
+    entry: 'http://localhost:8100/index.html',
     routes: [
       { name: '首页', path: '/user/home' },
       { name: '权限演示', path: '/user/access' },

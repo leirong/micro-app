@@ -6,7 +6,7 @@
       {
         "key": "user",
         "name": "用户中心",
-        "entry": "/micro-app/child/user/",
+        "entry": "https://leirong.github.io/micro-app/child/user/index.html",
         "routes": [
           { "name": "首页", "path": "/user/home" },
           { "name": "权限演示", "path": "/user/access" },
