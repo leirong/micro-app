@@ -21,7 +21,14 @@ export const layout = () => {
       locale: false,
     },
     ...(isMicroApp
-      ? { headerRender: false, menuRender: false, menuHeaderRender: false }
+      ? {
+          headerRender: false,
+          menuRender: false,
+          menuHeaderRender: false,
+          // 外层 padding 已由 portal 的 layout 提供,去掉自身内容区 padding,
+          // 否则两层 layout 的 padding 叠加,子应用页面比主应用多缩进一圈
+          contentStyle: { padding: 0 },
+        }
       : {}),
   };
 };

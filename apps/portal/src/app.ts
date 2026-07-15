@@ -63,5 +63,10 @@ export const layout = () => {
     menu: {
       locale: false,
     },
+    // ProLayout 只有检测到页面里的 PageContainer 才会把内容区 padding 置 0;
+    // 子应用路由渲染的是 MicroApp 组件,检测不到,会套上默认 32px 40px,
+    // 与子应用内部 PageContainer 的 padding 叠加。统一置 0,间距由各页面的
+    // PageContainer 提供,保证主/子应用页面缩进一致(本应用所有页面都用了 PageContainer)。
+    contentStyle: { padding: 0 },
   };
 };
