@@ -9,6 +9,9 @@ export default defineConfig({
   layout: {
     title: '@umijs/max',
   },
+  qiankun: {
+    master: {},
+  },
   routes: [
     {
       path: '/',
@@ -31,6 +34,4 @@ export default defineConfig({
     },
   ],
   npmClient: 'pnpm',
-  utoopack: {},
 });
-

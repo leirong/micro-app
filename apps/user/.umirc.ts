@@ -9,6 +9,10 @@ export default defineConfig({
   layout: {
     title: '@umijs/max',
   },
+  // user 作为 qiankun 子应用,由 portal 主应用加载
+  qiankun: {
+    slave: {},
+  },
   routes: [
     {
       path: '/',
@@ -31,6 +35,5 @@ export default defineConfig({
     },
   ],
   npmClient: 'pnpm',
-  utoopack: {},
 });
 

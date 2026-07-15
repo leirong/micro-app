@@ -7,10 +7,16 @@ export async function getInitialState(): Promise<{ name: string }> {
 }
 
 export const layout = () => {
+  // 作为 qiankun 子应用被 portal 加载时,隐藏自身布局外壳(菜单+顶栏),
+  // 菜单统一由 portal 主应用提供,这里只渲染页面内容,避免二级布局重叠
+  const isMicroApp = window.__POWERED_BY_QIANKUN__;
   return {
     logo: 'https://img.alicdn.com/tfs/TB1YHEpwUT1gK0jSZFhXXaAtVXa-28-27.svg',
     menu: {
       locale: false,
     },
+    ...(isMicroApp
+      ? { headerRender: false, menuRender: false, menuHeaderRender: false }
+      : {}),
   };
 };
